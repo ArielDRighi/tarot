@@ -13,6 +13,8 @@ import { DeckController } from './deck.controller';
 import { DeckService } from './deck.service';
 import { InterpretationService } from './interpretation.service';
 import { InterpretationController } from './interpretation.controller';
+import { CardController } from './card.controller';
+import { CardService } from './card.service';
 
 @Module({
   imports: [
@@ -26,8 +28,18 @@ import { InterpretationController } from './interpretation.controller';
     HttpModule,
     ConfigModule,
   ],
-  controllers: [TarotController, DeckController, InterpretationController],
-  providers: [TarotService, DeckService, InterpretationService],
-  exports: [TarotService, DeckService, InterpretationService],
+  controllers: [
+    TarotController,
+    DeckController,
+    CardController,
+    InterpretationController,
+  ],
+  providers: [TarotService, DeckService, CardService, InterpretationService],
+  exports: [
+    TarotService,
+    DeckService,
+    CardService, // Exportar el nuevo servicio
+    InterpretationService,
+  ],
 })
 export class TarotModule {}

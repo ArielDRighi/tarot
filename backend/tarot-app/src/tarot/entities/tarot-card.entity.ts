@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   ManyToMany,
+  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { TarotDeck } from './tarot-deck.entity';
@@ -80,7 +81,15 @@ export class TarotCard {
   @Column('text')
   keywords: string;
 
+  @ApiProperty({
+    example: 1,
+    description: 'ID del mazo al que pertenece la carta',
+  })
+  @Column()
+  deckId: number;
+
   @ManyToOne(() => TarotDeck, (deck) => deck.cards)
+  @JoinColumn({ name: 'deckId' })
   deck: TarotDeck;
 
   @ManyToMany(() => TarotReading, (reading) => reading.cards)

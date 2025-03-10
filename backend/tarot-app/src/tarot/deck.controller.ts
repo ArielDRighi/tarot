@@ -22,12 +22,9 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { DeckService } from './deck.service';
 import { CreateDeckDto } from './dto/create-deck.dto';
 import { UpdateDeckDto } from './dto/update-deck.dto';
-import { CreateCardDto } from './dto/create-card.dto';
-import { UpdateCardDto } from './dto/update-card.dto';
 import { TarotDeck } from './entities/tarot-deck.entity';
-import { TarotCard } from './entities/tarot-card.entity';
 
-@ApiTags('Mazos y Cartas')
+@ApiTags('Mazos')
 @Controller('decks')
 export class DeckController {
   constructor(private readonly deckService: DeckService) {}
@@ -123,115 +120,5 @@ export class DeckController {
     }
     await this.deckService.removeDeck(id);
     return { message: 'Mazo eliminado con éxito' };
-  }
-
-  // Endpoints para cartas
-  @UseGuards(JwtAuthGuard)
-  @Post('cards')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Crear una nueva carta (solo admin)' })
-  @ApiResponse({
-    status: 201,
-    description: 'Carta creada con éxito',
-    type: TarotCard,
-  })
-  @ApiResponse({
-    status: 403,
-    description: 'Acceso denegado - Solo administradores',
-  })
-  async createCard(@Request() req, @Body() createCardDto: CreateCardDto) {
-    // Verificar si es administrador
-    if (!req.user.isAdmin) {
-      throw new ForbiddenException('Solo administradores pueden crear cartas');
-    }
-    return this.deckService.createCard(createCardDto);
-  }
-
-  @Get('cards')
-  @ApiOperation({ summary: 'Obtener todas las cartas' })
-  @ApiResponse({
-    status: 200,
-    description: 'Lista de todas las cartas',
-    type: [TarotCard],
-  })
-  async getAllCards() {
-    return this.deckService.findAllCards();
-  }
-
-  @Get(':id/cards')
-  @ApiOperation({ summary: 'Obtener todas las cartas de un mazo específico' })
-  @ApiParam({ name: 'id', description: 'ID del mazo' })
-  @ApiResponse({
-    status: 200,
-    description: 'Lista de cartas del mazo',
-    type: [TarotCard],
-  })
-  @ApiResponse({ status: 404, description: 'Mazo no encontrado' })
-  async getCardsByDeck(@Param('id', ParseIntPipe) id: number) {
-    return this.deckService.findCardsByDeck(id);
-  }
-
-  @Get('cards/:id')
-  @ApiOperation({ summary: 'Obtener una carta específica' })
-  @ApiParam({ name: 'id', description: 'ID de la carta' })
-  @ApiResponse({
-    status: 200,
-    description: 'Carta encontrada',
-    type: TarotCard,
-  })
-  @ApiResponse({ status: 404, description: 'Carta no encontrada' })
-  async getCardById(@Param('id', ParseIntPipe) id: number) {
-    return this.deckService.findCardById(id);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Patch('cards/:id')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Actualizar una carta (solo admin)' })
-  @ApiParam({ name: 'id', description: 'ID de la carta a actualizar' })
-  @ApiResponse({
-    status: 200,
-    description: 'Carta actualizada con éxito',
-    type: TarotCard,
-  })
-  @ApiResponse({
-    status: 403,
-    description: 'Acceso denegado - Solo administradores',
-  })
-  @ApiResponse({ status: 404, description: 'Carta no encontrada' })
-  async updateCard(
-    @Request() req,
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateCardDto: UpdateCardDto,
-  ) {
-    // Verificar si es administrador
-    if (!req.user.isAdmin) {
-      throw new ForbiddenException(
-        'Solo administradores pueden actualizar cartas',
-      );
-    }
-    return this.deckService.updateCard(id, updateCardDto);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Delete('cards/:id')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Eliminar una carta (solo admin)' })
-  @ApiParam({ name: 'id', description: 'ID de la carta a eliminar' })
-  @ApiResponse({ status: 200, description: 'Carta eliminada con éxito' })
-  @ApiResponse({
-    status: 403,
-    description: 'Acceso denegado - Solo administradores',
-  })
-  @ApiResponse({ status: 404, description: 'Carta no encontrada' })
-  async removeCard(@Request() req, @Param('id', ParseIntPipe) id: number) {
-    // Verificar si es administrador
-    if (!req.user.isAdmin) {
-      throw new ForbiddenException(
-        'Solo administradores pueden eliminar cartas',
-      );
-    }
-    await this.deckService.removeCard(id);
-    return { message: 'Carta eliminada con éxito' };
   }
 }

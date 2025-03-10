@@ -104,6 +104,12 @@ export class DeckService {
     }
   }
 
+  // Método auxiliar para verificar si existe un mazo (podría ser utilizado por otros servicios)
+  async deckExists(id: number): Promise<boolean> {
+    const count = await this.deckRepository.count({ where: { id } });
+    return count > 0;
+  }
+
   // Métodos para gestionar cartas dentro de un mazo
   async createCard(createCardDto: CreateCardDto): Promise<TarotCard> {
     // Verificar que el mazo existe

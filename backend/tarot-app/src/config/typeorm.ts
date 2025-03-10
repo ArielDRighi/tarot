@@ -28,6 +28,7 @@ const config = {
   migrations: ['dist/migrations/*{.ts,.js}'],
   migrationsTableName: 'migrations',
   ssl: false,
+  dropSchema: false,
 };
 
 // Verificar que las variables críticas estén definidas
