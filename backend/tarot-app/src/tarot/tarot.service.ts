@@ -181,4 +181,46 @@ export class TarotService {
   async findCardById(id: number): Promise<TarotCard> {
     return this.deckService.findCardById(id);
   }
+
+  // Método para enviar una lectura por correo
+  async shareReadingByEmail(
+    readingId: number,
+    emailDetails: {
+      recipientEmail: string;
+      subject?: string;
+      additionalMessage?: string;
+    },
+    userId: number,
+  ) {
+    // Verificar que el usuario tiene acceso a esta lectura
+    const reading = await this.findReadingById(readingId, userId);
+
+    // Aquí implementarías la lógica para enviar el email
+    // Esto es un placeholder - en una implementación real, usarías un servicio de email
+    console.log(
+      `Enviando lectura ${readingId} a ${emailDetails.recipientEmail}`,
+    );
+
+    return {
+      success: true,
+      message: `Lectura enviada a ${emailDetails.recipientEmail}`,
+    };
+  }
+
+  // Método para compartir en redes sociales (placeholder)
+  async shareReadingSocial(
+    readingId: number,
+    socialNetwork: string,
+    userId: number,
+  ) {
+    // Verificar que el usuario tiene acceso a esta lectura
+    const reading = await this.findReadingById(readingId, userId);
+
+    // Placeholder para la funcionalidad de compartir en redes sociales
+    return {
+      success: true,
+      message: `Compartido en ${socialNetwork}`,
+      shareUrl: `https://example.com/share/${readingId}`,
+    };
+  }
 }
