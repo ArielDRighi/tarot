@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { TarotReading } from '../../tarot/entities/tarot-reading.entity';
 
 @Entity()
 export class User {
@@ -43,6 +45,9 @@ export class User {
   })
   @Column({ default: false })
   isAdmin: boolean;
+
+  @OneToMany(() => TarotReading, (reading) => reading.user)
+  readings: TarotReading[];
 
   @ApiProperty({
     example: '2023-01-01T00:00:00Z',
